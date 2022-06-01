@@ -3,8 +3,10 @@
 #include <type_traits>
 #include <utility>
 #include <variant/detail/uninitialized.h>
+#ifdef USE_THRUST
 #include <thrust/memory.h>
-#include <assert.h>
+#endif
+#include <cassert>
 
 namespace variant {
 
@@ -438,6 +440,7 @@ struct variant {
         return *this;
     }
 
+#ifdef USE_THRUST
     //XXX WAR Thrust presenting references during copies
     //More WAR may be necessary.
     template<typename P>
@@ -448,6 +451,7 @@ struct variant {
                       (m_storage, m_which), thrust::raw_reference_cast(ref));
         return *this;
     }
+#endif
 
     __host__ __device__
     int which() const {
